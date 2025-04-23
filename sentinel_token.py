@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from uuid import uuid4
 import json
 import requests
+import os
 from proof_of_work import get_pow_token
 
 app = Flask(__name__)
@@ -49,17 +50,17 @@ def refresh_token(flow):
 
 def get_sentinel_token():
     flow = 'sora_create_task'
-    token = refresh_token(flow)  # This can be used now in 'OpenAI-Sentinel-Token' header
+    token = refresh_token(flow)  # 这里可以使用 'OpenAI-Sentinel-Token' 头部
     return token
 
 @app.route('/get_sentinel_token', methods=['GET'])
 def get_sentinel_token_route():
     return jsonify(get_sentinel_token())
 
-# New '/' route
+# 新增的 '/' 路由
 @app.route('/', methods=['GET'])
 def home():
-    return jsonify({"message": "Welcome to the Sentinel Token API!", "status": "ok"})
+    return jsonify({"message": "欢迎来到 Sentinel Token API!", "status": "ok"})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
